@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Notaría Correa</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f0ede6;
+      min-height: 100vh;
+    }
+    .navbar {
+      background-color: #4CAF50 !important;
+    }
+    .team-card {
+      cursor: pointer;
+      border: none;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(60, 60, 60, 0.10);
+      transition: transform 0.15s, box-shadow 0.15s;
+      margin-bottom: 24px;
+    }
+    .team-card:hover {
+      transform: translateY(-4px) scale(1.03);
+      box-shadow: 0 8px 24px rgba(60, 60, 60, 0.13);
+      background: #e8f5e9;
+    }
+    .team-header {
+      background: #4CAF50;
+      color: #fff;
+      border-radius: 12px 12px 0 0;
+      padding: 18px 0 10px 0;
+      font-size: 1.2rem;
+      font-weight: 600;
+      text-align: center;
+    }
+    .team-body {
+      padding: 18px 20px 18px 20px;
+      text-align: center;
+      height: 110px;
+      display: grid;
+      grid-template-rows: 1fr auto;
+      gap: 10px;
+    }
+    .team-leader {
+      color: #388e3c;
+      font-size: 0.98rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1.2;
+    }
+    .btn-outline-light:hover {
+      background-color: rgba(255,255,255,0.2);
+    }
+    .admin-badge {
+      background: linear-gradient(45deg, #ff9800, #f57c00);
+      color: white;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      margin-left: 10px;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+      <a class="navbar-brand" href="#">Notaría Correa</a>
+      <div class="d-flex">
+        <span class="navbar-text me-3" id="userGreeting"></span>
+        <button class="btn btn-outline-light" id="logoutBtn">Salir</button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-12 text-center mb-4">
+        <h2 id="dashboardTitle">Panel de Equipos de WhatsApp</h2>
+        <p class="lead" id="dashboardSubtitle">Selecciona el equipo al que deseas ingresar</p>
+      </div>
+    </div>
+    <div class="row justify-content-center" id="teamsRow">
+      <!-- Aquí se insertan las tarjetas de equipos -->
+    </div>
+  </div>
+
+  <script src="js/auth.js"></script>
+  <script>
+    // Datos de equipos - TODOS LOS 8 EQUIPOS
+    const equipos = [
+      { codigo: 'gce', nombre: 'GCE', abogado: 'Gerardo Correa Etchegaray' },
+      { codigo: 'rtc', nombre: 'RTC', abogado: 'Raul Trinidad Combaluzier' },
+      { codigo: 'acr', nombre: 'ACR', abogado: 'Aida Cabrera Rodríguez' },
+      { codigo: 'jvp', nombre: 'JVP', abogado: 'Juan Carlos Velázquez Pérez' },
+      { codigo: 'djz', nombre: 'DJZ', abogado: 'Dagny Juárez Zamorategui' },
+      { codigo: 'fce', nombre: 'FCE', abogado: 'Fernando Correa Etchegaray' },
+      { codigo: 'llt', nombre: 'LLT', abogado: 'Leonardo Lerdo de Tejada' },
+      { codigo: 'sld', nombre: 'SLD', abogado: 'Silvia Luis Díaz' }
+    ];
+
+    // Verificar usuario logueado
+    const user = AuthService.getCurrentUser();
+    if (!user) {
+      window.location.href = 'index.html';
+    }
+
+    // Mostrar información del usuario
+    const userGreeting = document.getElementById('userGreeting');
+    if (user.username === 'gce' || user.role === 'notario' || user.role === 'admin') {
+      userGreeting.innerHTML = `Hola, ${user.name} <span class="admin-badge">NOTARIO</span>`;
+      document.getElementById('dashboardTitle').textContent = 'Panel General - Todos los Equipos';
+      document.getElementById('dashboardSubtitle').textContent = 'Como notario, puedes acceder a cualquier equipo';
+    } else {
+      userGreeting.textContent = `Hola, ${user.name}`;
+    }
+
+    // Logout
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      AuthService.logout();
+    });
+
+    // Determinar qué equipos mostrar según permisos
+    let equiposAMostrar = [];
+    if (user.username === 'gce' || user.role === 'notario' || user.role === 'admin') {
+      // El notario ve todos los equipos
+      equiposAMostrar = equipos;
+      console.log('NOTARIO - Mostrando todos los equipos:', equipos.length);
+    } else {
+      // Los demás solo ven su equipo
+      equiposAMostrar = equipos.filter(e => `equipo-${e.codigo}` === user.group);
+      console.log('USUARIO NORMAL - Mostrando equipo:', user.group);
+    }
+
+    // Renderizar tarjetas de equipos
+    const teamsRow = document.getElementById('teamsRow');
+    equiposAMostrar.forEach(equipo => {
+      const col = document.createElement('div');
+      col.className = 'col-md-4 col-lg-3';
+
+      // Marcar el equipo propio del usuario
+      const isOwnTeam = `equipo-${equipo.codigo}` === user.group;
+      const teamBadge = isOwnTeam ? '<span class="badge bg-warning text-dark ms-2">Tu equipo</span>' : '';
+
+      col.innerHTML = `
+        <div class="card team-card" onclick="window.location.href='equipo.html?equipo=${equipo.codigo}'">
+          <div class="team-header">Equipo ${equipo.nombre}${teamBadge}</div>
+          <div class="team-body">
+            <div class="team-leader">Abogado: ${equipo.abogado}</div>
+            <button class="btn btn-success w-100">Entrar</button>
+          </div>
+        </div>
+      `;
+      teamsRow.appendChild(col);
+    });
+
+    // Debug info
+    console.log('Usuario actual:', user);
+    console.log('Equipos a mostrar:', equiposAMostrar.length);
+
+    // Si no hay equipos para mostrar (error de configuración)
+    if (equiposAMostrar.length === 0) {
+      teamsRow.innerHTML = '<div class="col-12 text-center"><div class="alert alert-warning">No tienes equipos asignados. Contacta al administrador.</div></div>';
+    }
+  </script>
+</body>
+</html>

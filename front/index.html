@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - WhatsApp Notaría</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      min-height: 100vh;
+      background: #f0ede6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .wa-login-card {
+      width: 100%;
+      max-width: 370px;
+      border-radius: 18px;
+      box-shadow: 0 8px 32px 0 rgba(60, 60, 60, 0.18);
+      background: #fff;
+      overflow: hidden;
+      border: none;
+    }
+    .wa-header {
+      background: #4CAF50;
+      color: #fff;
+      padding: 32px 24px 18px 24px;
+      text-align: center;
+      border-bottom: 1px solid #e0e0e0;
+    }
+    .wa-header .wa-logo {
+      font-size: 2.5rem;
+      margin-bottom: 8px;
+      display: block;
+    }
+    .wa-header .wa-title {
+      font-size: 1.3rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+    .wa-form {
+      padding: 28px 24px 24px 24px;
+    }
+    .form-control:focus {
+      border-color: #4CAF50;
+      box-shadow: 0 0 0 0.2rem rgba(76,175,80,.15);
+    }
+    .wa-btn {
+      background: #4CAF50;
+      border: none;
+      color: #fff;
+      font-weight: 600;
+      border-radius: 20px;
+      padding: 10px 0;
+      margin-top: 10px;
+      transition: background 0.2s;
+    }
+    .wa-btn:hover {
+      background: #388e3c;
+    }
+    .wa-info {
+      font-size: 0.9rem;
+      color: #888;
+      margin-top: 18px;
+      text-align: center;
+    }
+    .alert {
+      margin-top: 10px;
+      font-size: 0.95rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="wa-login-card">
+    <div class="wa-header">
+      <span class="wa-logo">💬</span>
+      <div class="wa-title">WhatsApp Notaría</div>
+    </div>
+    <form class="wa-form" id="loginForm">
+      <div class="mb-3">
+        <label for="username" class="form-label">Usuario</label>
+        <input type="text" class="form-control" id="username" required autocomplete="username">
+      </div>
+      <div class="mb-3">
+        <label for="password" class="form-label">Contraseña</label>
+        <input type="password" class="form-control" id="password" required autocomplete="current-password">
+      </div>
+      <button type="submit" class="btn wa-btn w-100">Ingresar</button>
+      <div id="loginError" class="alert alert-danger d-none"></div>
+      <div class="wa-info">
+        Acceso solo para personal autorizado.<br>
+        <span style="color:#4CAF50;">Notaría Correa</span>
+      </div>
+    </form>
+  </div>
+  <script src="js/auth.js"></script>
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      if (AuthService.login(username, password)) {
+        window.location.href = 'dashboard.html';
+      } else {
+        const errorEl = document.getElementById('loginError');
+        errorEl.textContent = 'Usuario o contraseña incorrectos';
+        errorEl.classList.remove('d-none');
+      }
+    });
+  </script>
+</body>
+</html>

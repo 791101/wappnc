@@ -1,0 +1,52 @@
+{
+  "name": "whatsapp-notaria-backend",
+  "version": "1.0.0",
+  "description": "Backend para sistema WhatsApp Business de Notaría Correa",
+  "main": "main_server.js",
+  "scripts": {
+    "start": "node main_server.js",
+    "dev": "nodemon main_server.js",
+    "test": "jest",
+    "lint": "eslint .",
+    "pm2:start": "pm2 start ecosystem.config.js",
+    "pm2:stop": "pm2 stop whatsapp-backend",
+    "pm2:restart": "pm2 restart whatsapp-backend",
+    "pm2:logs": "pm2 logs whatsapp-backend"
+  },
+  "keywords": [
+    "whatsapp",
+    "business",
+    "notaria",
+    "api",
+    "nodejs"
+  ],
+  "author": "Notaría Correa",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "mysql2": "^3.6.0",
+    "bcrypt": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "cors": "^2.8.5",
+    "helmet": "^7.0.0",
+    "express-rate-limit": "^6.8.1",
+    "compression": "^1.7.4",
+    "multer": "^1.4.5-lts.1",
+    "axios": "^1.4.0",
+    "winston": "^3.10.0",
+    "winston-daily-rotate-file": "^4.7.1",
+    "dotenv": "^16.3.1",
+    "moment": "^2.29.4",
+    "validator": "^13.9.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1",
+    "jest": "^29.6.1",
+    "eslint": "^8.45.0",
+    "supertest": "^6.3.3"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  }
+}

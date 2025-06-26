@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Equipo - WhatsApp Business</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background: #ece5dd;
+        }
+
+        #app {
+            display: flex;
+            height: 100vh;
+            max-height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Sidebar mejorado */
+        #sidebar {
+            width: 380px;
+            background: #fff;
+            border-right: 1px solid #ddd;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #sidebar-header {
+            padding: 20px;
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .team-info-sidebar {
+            display: flex;
+            align-items: center;
+        }
+
+        .team-avatar-sidebar {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #388e3c, #2e7d32);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-weight: bold;
+            font-size: 16px;
+            min-width: 45px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-sidebar {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            transition: all 0.3s;
+        }
+
+        .btn-sidebar:hover {
+            background: rgba(255,255,255,0.3);
+            color: white;
+        }
+
+        #search-container {
+            padding: 15px;
+            border-bottom: 1px solid #f0f0f0;
+            background: #f8f9fa;
+        }
+
+        .search-box {
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 15px 12px 45px;
+            border-radius: 25px;
+            border: 1px solid #ddd;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .search-box input:focus {
+            border-color: #4CAF50;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+        }
+
+        #chat-list {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .chat-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            cursor: pointer;
+            border-bottom: 1px solid #f0f0f0;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .chat-item:hover {
+            background: #f8f9fa;
+        }
+
+        .chat-item.active {
+            background: #e8f5e9;
+            border-right: 4px solid #4CAF50;
+        }
+
+        .chat-avatar {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            margin-right: 15px;
+            font-size: 18px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            min-width: 55px;
+            flex-shrink: 0;
+        }
+
+        .chat-info {
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .chat-name {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .chat-phone {
+            font-size: 12px;
+            color: #4CAF50;
+            font-weight: 500;
+            margin-bottom: 2px;
+        }
+
+        .chat-last-message {
+            font-size: 14px;
+            color: #666;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .chat-meta {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 4px;
+        }
+
+        .chat-time {
+            font-size: 12px;
+            color: #999;
+            white-space: nowrap;
+        }
+
+        .unread-badge {
+            background: #4CAF50;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        /* Chat area mejorado */
+        #chat-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #f7f7f7;
+        }
+
+        #chat-header {
+            background: #ededed;
+            padding: 15px 20px;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            align-items: center;
+        }
+
+        #chat-header .chat-avatar {
+            width: 45px;
+            height: 45px;
+            margin-right: 15px;
+        }
+
+        .chat-header-info {
+            flex: 1;
+        }
+
+        .chat-title {
+            font-weight: 600;
+            font-size: 18px;
+            margin-bottom: 2px;
+        }
+
+        .chat-subtitle {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .chat-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-chat-action {
+            background: none;
+            border: none;
+            color: #666;
+            padding: 8px;
+            border-radius: 50%;
+            transition: all 0.3s;
+        }
+
+        .btn-chat-action:hover {
+            background: #f0f0f0;
+            color: #4CAF50;
+        }
+
+        #chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: linear-gradient(to bottom, #e5ddd5, #d9d0c7);
+            position: relative;
+        }
+
+        .message {
+            max-width: 65%;
+            margin-bottom: 15px;
+            display: flex;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .message.sent {
+            justify-content: flex-end;
+        }
+
+        .message-bubble {
+            padding: 12px 16px;
+            border-radius: 18px;
+            position: relative;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            font-size: 15px;
+            line-height: 1.4;
+            word-wrap: break-word;
+        }
+
+        .message.received .message-bubble {
+            background: white;
+            border-bottom-left-radius: 4px;
+        }
+
+        .message.sent .message-bubble {
+            background: #dcf8c6;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message-time {
+            font-size: 11px;
+            color: #666;
+            margin-top: 6px;
+            text-align: right;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 4px;
+        }
+
+        .message-status {
+            color: #4CAF50;
+            font-size: 12px;
+        }
+
+        #chat-input-container {
+            padding: 15px 20px;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-top: 1px solid #ddd;
+        }
+
+        .input-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-input-action {
+            background: none;
+            border: none;
+            color: #666;
+            padding: 8px;
+            border-radius: 50%;
+            transition: all 0.3s;
+        }
+
+        .btn-input-action:hover {
+            background: #e0e0e0;
+            color: #4CAF50;
+        }
+
+        #chat-input {
+            flex: 1;
+            border-radius: 25px;
+            border: 1px solid #ccc;
+            padding: 12px 20px;
+            font-size: 15px;
+            resize: none;
+            outline: none;
+            transition: border-color 0.3s;
+            max-height: 100px;
+        }
+
+        #chat-input:focus {
+            border-color: #4CAF50;
+        }
+
+        #send-btn {
+            background: #4CAF50;
+            border: none;
+            color: white;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        #send-btn:hover {
+            background: #45a049;
+            transform: scale(1.05);
+        }
+
+        .empty-chat {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #666;
+            text-align: center;
+        }
+
+        .empty-chat i {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+
+        .access-denied {
+            text-align: center;
+            margin-top: 100px;
+        }
+
+        .loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            color: #666;
+        }
+
+        .loading i {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            #sidebar {
+                width: 100%;
+                position: absolute;
+                z-index: 1000;
+                transform: translateX(-100%);
+                transition: transform 0.3s;
+            }
+
+            #sidebar.show {
+                transform: translateX(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="loading" class="loading">
+        <i class="fas fa-spinner"></i>
+        <h4>Cargando equipo...</h4>
+        <p>Verificando permisos y cargando datos</p>
+    </div>
+
+    <div id="app" class="d-none">
+        <div id="sidebar">
+            <div id="sidebar-header">
+                <div class="team-info-sidebar">
+                    <div class="team-avatar-sidebar" id="teamAvatarSidebar">---</div>
+                    <div>
+                        <div style="font-weight: 600; font-size: 16px;" id="teamNameSidebar">Cargando...</div>
+                        <div style="font-size: 12px; opacity: 0.9;" id="teamLawyerSidebar">Abogado: Cargando...</div>
+                    </div>
+                </div>
+                <div class="sidebar-actions">
+                    <button class="btn-sidebar" onclick="window.location.href='dashboard.html'" title="Dashboard">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <button class="btn-sidebar" id="logoutBtn" title="Salir">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div id="search-container">
+                <div class="search-box">
+                    <input type="text" id="search-input" placeholder="Buscar chats o clientes..." />
+                    <i class="fas fa-search"></i>
+                </div>
+            </div>
+
+            <div id="chat-list"></div>
+        </div>
+
+        <div id="chat-area">
+            <div id="chat-header">
+                <div class="chat-avatar" id="chat-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="chat-header-info">
+                    <div class="chat-title" id="chat-title">Selecciona un chat</div>
+                    <div class="chat-subtitle" id="chat-subtitle">Elige un contacto para comenzar</div>
+                </div>
+                <div class="chat-actions">
+                    <button class="btn-chat-action" title="Buscar en chat">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    <button class="btn-chat-action" title="Más opciones">
+                        <i class="fas fa-ellipsis-v"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div id="chat-messages">
+                <div class="empty-chat">
+                    <i class="fab fa-whatsapp"></i>
+                    <h4>WhatsApp Business</h4>
+                    <p>Selecciona un chat para comenzar a conversar</p>
+                </div>
+            </div>
+
+            <div id="chat-input-container">
+                <div class="input-actions">
+                    <button class="btn-input-action" title="Adjuntar archivo">
+                        <i class="fas fa-paperclip"></i>
+                    </button>
+                    <button class="btn-input-action" title="Emoji">
+                        <i class="fas fa-smile"></i>
+                    </button>
+                </div>
+                <textarea id="chat-input" placeholder="Escribe un mensaje..." rows="1"></textarea>
+                <button id="send-btn" title="Enviar mensaje">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="accessDenied" class="access-denied d-none">
+        <div class="container">
+            <div class="alert alert-danger">
+                <h4><i class="fas fa-exclamation-triangle"></i> Acceso Denegado</h4>
+                <p>No tienes permisos para acceder a este equipo.</p>
+                <button class="btn btn-primary" onclick="window.location.href='dashboard.html'">
+                    Regresar al Dashboard
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script>
+        // Base de datos completa de TODOS LOS 8 EQUIPOS
+        const EQUIPOS_DATABASE = {
+            'gce': {
+                nombre: 'GCE',
+                abogado: 'Gerardo Correa Etchegaray (NOTARIO)',
+                chats: [
+                    {
+                        id: 'maria_gonzalez_gce',
+                        nombre: 'María González',
+                        avatar: 'MG',
+                        telefono: '+52 55 1234-5678',
+                        lastMessage: 'Perfecto, déjeme revisar en nuestro sistema',
+                        lastTime: '10:29',
+                        unread: 2,
+                        messages: [
+                            { from: 'client', text: 'Hola, buenos días. Necesito información sobre las escrituras de mi propiedad. Es urgente porque necesito vender.', time: '10:25' },
+                            { from: 'me', text: 'Buenos días María. Con gusto le ayudo. ¿Me puede proporcionar el número de escritura o los datos completos de la propiedad?', time: '10:26' },
+                            { from: 'client', text: 'Sí, es la escritura número 1234 del año 2020. La propiedad está en Colonia Centro, calle Hidalgo #123.', time: '10:28' },
+                            { from: 'me', text: 'Perfecto, déjeme revisar en nuestro sistema. En unos minutos le proporciono la información completa y le explico el proceso de venta.', time: '10:29' }
+                        ]
+                    },
+                    {
+                        id: 'juan_rodriguez_gce',
+                        nombre: 'Juan Rodríguez',
+                        avatar: 'JR',
+                        telefono: '+52 55 2345-6789',
+                        lastMessage: '¿Cuándo puedo ir a firmar el poder?',
+                        lastTime: '09:15',
+                        unread: 0,
+                        messages: [
+                            { from: 'client', text: 'Buenos días, necesito hacer un poder notarial para mi esposa.', time: '09:00' },
+                            { from: 'me', text: 'Buenos días Juan. Con gusto le ayudamos. ¿Qué tipo de poder necesita?', time: '09:05' },
+                            { from: 'client', text: 'Un poder general para que pueda manejar mis cuentas bancarias.', time: '09:10' },
+                            { from: 'me', text: 'Perfecto. Necesitará traer identificaciones de ambos y podemos agendar la cita.', time: '09:12' },
+                            { from: 'client', text: '¿Cuándo puedo ir a firmar el poder?', time: '09:15' }
+                        ]
+                    }
+                ]
+            },
+            'fce': {
+                nombre: 'FCE',
+                abogado: 'Fernando Correa Etchegaray',
+                chats: [
+                    {
+                        id: 'roberto_perez_fce',
+                        nombre: 'Roberto Pérez',
+                        avatar: 'RP',
+                        telefono: '+52 55 6789-0123',
+                        lastMessage: 'Excelente. Podemos agendar para la próxima semana',
+                        lastTime: '11:45',
+                        unread: 1,
+                        messages: [
+                            { from: 'client', text: 'Buenos días. Necesito ayuda con una compraventa de inmueble. ¿Me pueden orientar sobre los requisitos?', time: '11:40' },
+                            { from: 'me', text: '¡Buenos días Roberto! Por supuesto, con gusto le ayudamos. Para la compraventa necesitará varios documentos. ¿Ya tiene la escritura original de la propiedad?', time: '11:41' },
+                            { from: 'client', text: 'Sí, tengo la escritura original y mi identificación oficial. ¿Qué más documentos necesito presentar?', time: '11:42' },
+                            { from: 'me', text: 'Perfecto. También necesitará: Certificado de libertad de gravamen actualizado, Documentos del comprador (IFE, CURP, RFC), Comprobante de domicilio, Avalúo comercial. ¿Ya acordaron el precio de venta?', time: '11:43' },
+                            { from: 'client', text: 'Sí, ya tenemos todo acordado en $2,500,000. ¿Cuándo podemos agendar la cita para firmar?', time: '11:44' },
+                            { from: 'me', text: 'Excelente. Podemos agendar para la próxima semana. Le envío por WhatsApp la lista completa de documentos y los horarios disponibles. ¿Le parece bien el martes a las 10:00 AM?', time: '11:45' }
+                        ]
+                    },
+                    {
+                        id: 'lucia_martinez_fce',
+                        nombre: 'Lucía Martínez',
+                        avatar: 'LM',
+                        telefono: '+52 55 7890-1234',
+                        lastMessage: 'Muchas gracias por la información',
+                        lastTime: 'Ayer',
+                        unread: 0,
+                        messages: [
+                            { from: 'client', text: 'Hola, necesito información sobre testamentos.', time: 'Ayer 14:00' },
+                            { from: 'me', text: 'Hola Lucía. Con gusto le ayudo con información sobre testamentos. ¿Es su primer testamento?', time: 'Ayer 14:05' },
+                            { from: 'client', text: 'Sí, nunca he hecho uno y quiero dejarlo todo en orden.', time: 'Ayer 14:10' },
+                            { from: 'me', text: 'Excelente decisión. Le explico el proceso y los documentos necesarios.', time: 'Ayer 14:15' },
+                            { from: 'client', text: 'Muchas gracias por la información', time: 'Ayer 14:20' }
+                        ]
+                    }
+                ]
+            },
+            'rtc': {
+                nombre: 'RTC',
+                abogado: 'Raul Trinidad Combaluzier',
+                chats: [
+                    {
+                        id: 'carlos_lopez_rtc',
+                        nombre: 'Carlos López',
+                        avatar: 'CL',
+                        telefono: '+52 55 3456-7890',
+                        lastMessage: '¿Qué documentos necesito para el divorcio?',
+                        lastTime: '14:20',
+                        unread: 3,
+                        messages: [
+                            { from: 'client', text: 'Buenas tardes, necesito asesoría para un divorcio.', time: '14:15' },
+                            { from: 'me', text: 'Buenas tardes Carlos. Con gusto le ayudo. ¿Es divorcio de mutuo acuerdo?', time: '14:18' },
+                            { from: 'client', text: '¿Qué documentos necesito para el divorcio?', time: '14:20' }
+                        ]
+                    },
+                    {
+                        id: 'patricia_ruiz_rtc',
+                        nombre: 'Patricia Ruiz',
+                        avatar: 'PR',
+                        telefono: '+52 55 4567-8901',
+                        lastMessage: 'Perfecto, nos vemos mañana',
+                        lastTime: '12:30',
+                        unread: 0,
+                        messages: [
+                            { from: 'client', text: 'Hola, necesito hacer una escritura de compraventa.', time: '12:25' },
+                            { from: 'me', text: 'Hola Patricia. Con gusto le ayudamos. ¿Ya tienen todos los documentos?', time: '12:28' },
+                            { from: 'client', text: 'Perfecto, nos vemos mañana', time: '12:30' }
+                        ]
+                    }
+                ]
+            },
+            'acr': {
+                nombre: 'ACR',
+                abogado: 'Aida Cabrera Rodríguez',
+                chats: [
+                    {
+                        id: 'ana_torres_acr',
+                        nombre: 'Ana Torres',
+                        avatar: 'AT',
+                        telefono: '+52 55 4567-8901',
+                        lastMessage: 'Perfecto, nos vemos el viernes',
+                        lastTime: '16:30',
+                        unread: 0,
+                        messages: [
+                            { from: 'client', text: 'Hola, necesito hacer una escritura de compraventa.', time: '16:25' },
+                            { from: 'me', text: 'Hola Ana. Con gusto le ayudamos. ¿Ya tienen todos los documentos?', time: '16:28' },
+                            { from: 'client', text: 'Perfecto, nos vemos el viernes', time: '16:30' }
+                        ]
+                    }
+                ]
+            },
+            'jvp': {
+                nombre: 'JVP',
+                abogado: 'Juan Carlos Velázquez Pérez',
+                chats: [
+                    {
+                        id: 'pedro_sanchez_jvp',
+                        nombre: 'Pedro Sánchez',
+                        avatar: 'PS',
+                        telefono: '+52 55 5678-9012',
+                        lastMessage: 'Gracias por la consulta',
+                        lastTime: '12:45',
+                        unread: 0,
+                        messages: [
+                            { from: 'client', text: 'Buenos días, consulta sobre herencias.', time: '12:40' },
+                            { from: 'me', text: 'Buenos días Pedro. ¿En qué le puedo ayudar con la herencia?', time: '12:42' },
+                            { from: 'client', text: 'Gracias por la consulta', time: '12:45' }
+                        ]
+                    }
+                ]
+            },
+            'djz': {
+                nombre: 'DJZ',
+                abogado: 'Dagny Juárez Zamorategui',
+                chats: [
+                    {
+                        id: 'sofia_ramirez_djz',
+                        nombre: 'Sofía Ramírez',
+                        avatar: 'SR',
+                        telefono: '+52 55 6789-0123',
+                        lastMessage: '¿Cuánto cuesta el trámite?',
+                        lastTime: '15:10',
+                        unread: 1,
+                        messages: [
+                            { from: 'client', text: 'Hola, necesito información sobre poderes.', time: '15:05' },
+                            { from: 'me', text: 'Hola Sofía. Con gusto le ayudo. ¿Qué tipo de poder necesita?', time: '15:08' },
+                            { from: 'client', text: '¿Cuánto cuesta el trámite?', time: '15:10' }
+                        ]
+                    }
+                ]
+            },
+            'llt': {
+                nombre: 'LLT',
+                abogado: 'Leonardo Lerdo de Tejada',
+                chats: [
+                    {
+                        id: 'elena_vargas_llt',
+                        nombre: 'Elena Vargas',
+                        avatar: 'EV',
+                        telefono: '+52 55 7890-1234',
+                        lastMessage: 'Perfecto, agendamos para mañana',
+                        lastTime: '13:25',
+                        unread: 0,
+                        messages: [
+                            { from: 'client', text: 'Buenas tardes, necesito una cita urgente.', time: '13:20' },
+                            { from: 'me', text: 'Buenas tardes Elena. ¿Para qué trámite necesita la cita?', time: '13:22' },
+                            { from: 'client', text: 'Perfecto, agendamos para mañana', time: '13:25' }
+                        ]
+                    }
+                ]
+            },
+            'sld': {
+                nombre: 'SLD',
+                abogado: 'Silvia Luis Díaz',
+                chats: [
+                    {
+                        id: 'diego_morales_sld',
+                        nombre: 'Diego Morales',
+                        avatar: 'DM',
+                        telefono: '+52 55 8901-2345',
+                        lastMessage: 'Muchas gracias por la información',
+                        lastTime: '11:50',
+                        unread: 0,
+                        messages: [
+                            { from: 'client', text: 'Buenos días, consulta sobre contratos.', time: '11:45' },
+                            { from: 'me', text: 'Buenos días Diego. ¿Qué tipo de contrato necesita?', time: '11:47' },
+                            { from: 'client', text: 'Muchas gracias por la información', time: '11:50' }
+                        ]
+                    }
+                ]
+            }
+        };
+
+        // Variables globales
+        let currentChatId = null;
+        let currentEquipo = null;
+        let equipoData = null;
+
+        // Elementos del DOM
+        const loadingEl = document.getElementById('loading');
+        const appEl = document.getElementById('app');
+        const accessDeniedEl = document.getElementById('accessDenied');
+        const chatListEl = document.getElementById('chat-list');
+        const chatTitleEl = document.getElementById('chat-title');
+        const chatSubtitleEl = document.getElementById('chat-subtitle');
+        const chatAvatarEl = document.getElementById('chat-avatar');
+        const chatMessagesEl = document.getElementById('chat-messages');
+        const chatInputEl = document.getElementById('chat-input');
+        const sendBtn = document.getElementById('send-btn');
+        const searchInput = document.getElementById('search-input');
+
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                await initializeApp();
+            } catch (error) {
+                console.error('Error inicializando la aplicación:', error);
+                showError('Error cargando la aplicación');
+            }
+        });
+
+        async function initializeApp() {
+            // Verificar autenticación
+            const user = AuthService.getCurrentUser();
+            if (!user) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            // Obtener equipo de la URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const equipoParam = urlParams.get('equipo');
+
+            if (!equipoParam) {
+                window.location.href = 'dashboard.html';
+                return;
+            }
+
+            currentEquipo = equipoParam.toLowerCase();
+
+            // Verificar que el equipo existe
+            if (!EQUIPOS_DATABASE[currentEquipo]) {
+                showError(`Equipo "${equipoParam}" no encontrado`);
+                return;
+            }
+
+            // Verificar permisos
+            const hasAccess = checkAccess(user, currentEquipo);
+            if (!hasAccess) {
+                showAccessDenied();
+                return;
+            }
+
+            // Cargar datos del equipo
+            equipoData = EQUIPOS_DATABASE[currentEquipo];
+
+            // Configurar interfaz
+            setupInterface();
+
+            // Mostrar aplicación
+            loadingEl.classList.add('d-none');
+            appEl.classList.remove('d-none');
+
+            // Inicializar funcionalidades
+            renderChatList();
+            setupEventListeners();
+
+            console.log(`Equipo ${equipoData.nombre} cargado para:`, user.name);
+        }
+
+        function checkAccess(user, equipo) {
+            // El notario (GCE) puede acceder a todos los equipos
+            if (user.username === 'gce' || user.role === 'notario' || user.role === 'admin') {
+                return true;
+            }
+
+            // Los demás solo pueden acceder a su equipo
+            return user.group === `equipo-${equipo}`;
+        }
+
+        function setupInterface() {
+            // Actualizar header del sidebar
+            document.getElementById('teamAvatarSidebar').textContent = equipoData.nombre;
+            document.getElementById('teamNameSidebar').textContent = `Equipo ${equipoData.nombre}`;
+            document.getElementById('teamLawyerSidebar').textContent = `Abogado: ${equipoData.abogado}`;
+            document.title = `Equipo ${equipoData.nombre} - WhatsApp Business`;
+        }
+
+        function renderChatList(filter = '') {
+            if (!equipoData) return;
+
+            chatListEl.innerHTML = '';
+            const filteredChats = equipoData.chats.filter(chat => 
+                chat.nombre.toLowerCase().includes(filter.toLowerCase()) || 
+                chat.lastMessage.toLowerCase().includes(filter.toLowerCase()) ||
+                chat.telefono.includes(filter)
+            );
+
+            if (filteredChats.length === 0) {
+                chatListEl.innerHTML = `
+                    <div class="text-center p-4 text-muted">
+                        <i class="fas fa-search mb-2" style="font-size: 2rem; opacity: 0.3;"></i>
+                        <p>No se encontraron chats</p>
+                    </div>
+                `;
+                return;
+            }
+
+            filteredChats.forEach(chat => {
+                const chatItem = document.createElement('div');
+                chatItem.className = 'chat-item' + (chat.id === currentChatId ? ' active' : '');
+                chatItem.innerHTML = `
+                    <div class="chat-avatar">${chat.avatar}</div>
+                    <div class="chat-info">
+                        <div class="chat-name">${chat.nombre}</div>
+                        <div class="chat-phone">${chat.telefono}</div>
+                        <div class="chat-last-message">${chat.lastMessage}</div>
+                    </div>
+                    <div class="chat-meta">
+                        <div class="chat-time">${chat.lastTime}</div>
+                        ${chat.unread > 0 ? `<div class="unread-badge">${chat.unread}</div>` : ''}
+                    </div>
+                `;
+                chatItem.onclick = () => selectChat(chat.id);
+                chatListEl.appendChild(chatItem);
+            });
+        }
+
+        function renderMessages() {
+            if (!equipoData || !currentChatId) {
+                chatMessagesEl.innerHTML = `
+                    <div class="empty-chat">
+                        <i class="fab fa-whatsapp"></i>
+                        <h4>WhatsApp Business</h4>
+                        <p>Selecciona un chat para comenzar a conversar</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const chat = equipoData.chats.find(c => c.id === currentChatId);
+            if (!chat) return;
+
+            // Actualizar header del chat
+            chatTitleEl.textContent = chat.nombre;
+            chatSubtitleEl.textContent = chat.telefono;
+            chatAvatarEl.innerHTML = chat.avatar;
+            chatAvatarEl.style.background = 'linear-gradient(135deg, #4CAF50, #45a049)';
+            chatAvatarEl.style.color = 'white';
+            chatAvatarEl.style.fontSize = '18px';
+            chatAvatarEl.style.fontWeight = 'bold';
+
+            // Renderizar mensajes
+            chatMessagesEl.innerHTML = '';
+            chat.messages.forEach(msg => {
+                const msgDiv = document.createElement('div');
+                msgDiv.className = 'message ' + (msg.from === 'me' ? 'sent' : 'received');
+                msgDiv.innerHTML = `
+                    <div class="message-bubble">
+                        <div>${msg.text.replace(/\n/g, '<br>')}</div>
+                        <div class="message-time">
+                            ${msg.time}
+                            ${msg.from === 'me' ? '<i class="fas fa-check-double message-status"></i>' : ''}
+                        </div>
+                    </div>
+                `;
+                chatMessagesEl.appendChild(msgDiv);
+            });
+
+            // Scroll al final
+            chatMessagesEl.scrollTop = chatMessagesEl.scrollHeight;
+
+            // Marcar como leído
+            chat.unread = 0;
+            renderChatList(searchInput.value);
+        }
+
+        function selectChat(id) {
+            currentChatId = id;
+            renderChatList(searchInput.value);
+            renderMessages();
+        }
+
+        function setupEventListeners() {
+            // Logout
+            document.getElementById('logoutBtn').addEventListener('click', () => {
+                AuthService.logout();
+            });
+
+            // Enviar mensaje
+            sendBtn.onclick = sendMessage;
+            chatInputEl.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+
+            // Búsqueda
+            searchInput.oninput = () => {
+                renderChatList(searchInput.value);
+            };
+
+            // Auto-resize textarea
+            chatInputEl.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = Math.min(this.scrollHeight, 100) + 'px';
+            });
+        }
+
+        function sendMessage() {
+            const text = chatInputEl.value.trim();
+            if (!text || !currentChatId || !equipoData) return;
+
+            const chat = equipoData.chats.find(c => c.id === currentChatId);
+            if (!chat) return;
+
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+
+            // Agregar mensaje
+            chat.messages.push({ 
+                from: 'me', 
+                text, 
+                time: timeStr 
+            });
+
+            // Actualizar último mensaje
+            chat.lastMessage = text;
+            chat.lastTime = timeStr;
+
+            // Limpiar input
+            chatInputEl.value = '';
+            chatInputEl.style.height = 'auto';
+
+            // Re-renderizar
+            renderChatList(searchInput.value);
+            renderMessages();
+
+            // Aquí iría la llamada a la API para enviar el mensaje al backend
+            // await sendMessageToAPI(currentChatId, text);
+        }
+
+        function showError(message) {
+            loadingEl.innerHTML = `
+                <i class="fas fa-exclamation-triangle text-danger"></i>
+                <h4 class="text-danger">Error</h4>
+                <p>${message}</p>
+                <button class="btn btn-primary" onclick="window.location.href='dashboard.html'">
+                    Regresar al Dashboard
+                </button>
+            `;
+        }
+
+        function showAccessDenied() {
+            loadingEl.classList.add('d-none');
+            accessDeniedEl.classList.remove('d-none');
+        }
+
+        // Funciones para futuro backend
+        async function sendMessageToAPI(chatId, message) {
+            try {
+                const response = await fetch('/api/messages/send', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${AuthService.getToken()}`
+                    },
+                    body: JSON.stringify({
+                        chatId,
+                        message,
+                        equipo: currentEquipo
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Error enviando mensaje');
+                }
+
+                return await response.json();
+            } catch (error) {
+                console.error('Error enviando mensaje:', error);
+                // Manejar error
+            }
+        }
+
+        async function loadChatsFromAPI() {
+            try {
+                const response = await fetch(`/api/chats/${currentEquipo}`, {
+                    headers: {
+                        'Authorization': `Bearer ${AuthService.getToken()}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Error cargando chats');
+                }
+
+                return await response.json();
+            } catch (error) {
+                console.error('Error cargando chats:', error);
+                return null;
+            }
+        }
+    </script>
+</body>
+</html>
